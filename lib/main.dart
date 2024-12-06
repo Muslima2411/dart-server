@@ -80,7 +80,7 @@ class InfiniteScrollPostsState extends State<InfiniteScrollPosts> {
     });
 
     final url =
-        'http://localhost:8080/todos?_start=${currentPage * pageSize}&_limit=$pageSize';
+        'https://jsonplaceholder.typicode.com/posts?_start=${currentPage * pageSize}&_limit=$pageSize';
 
     try {
       final response = await _dio.get(url, options: _cacheOptions.toOptions());
@@ -159,13 +159,11 @@ class InfiniteScrollPostsState extends State<InfiniteScrollPosts> {
                 margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: ListTile(
                   title: Text(post['id'].toString(), style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600, color: Colors.white)),
-                  subtitle: Text(post['name']),
+                  subtitle: Text(post['title']),
                 ),
               );
             } else if (hasMore && isLoading) {
-              return ListView.builder(itemCount:10, itemBuilder: (_, index){
-                return _buildLoadingShimmer();
-              });
+              return _buildLoadingShimmer();
             } else {
               return const SizedBox.shrink();
             }
@@ -179,15 +177,17 @@ class InfiniteScrollPostsState extends State<InfiniteScrollPosts> {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
+      child: ListTile(
+        title: Container(
+          height: 20,
+          width: double.infinity,
           color: Colors.grey[300],
         ),
-        height: 200,
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        width: double.infinity,
-
+        subtitle: Container(
+          height: 14,
+          width: double.infinity,
+          color: Colors.grey[300],
+        ),
       ),
     );
   }
@@ -201,6 +201,4 @@ void main() {
     home: InfiniteScrollPosts(),
   ));
 }
-
-
 
